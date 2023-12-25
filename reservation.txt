@@ -1,0 +1,4 @@
+usr2 > name
+Center1 > center name
+Corona > vaccine vaccine
+Jan 1 2024 > date
