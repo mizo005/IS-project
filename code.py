@@ -59,13 +59,22 @@ for i in range(0, len(all_requests), 4):
 
 def admin_do():
     while True:
-        print("Here is the options menu: \n1. Vaccination Centers\n2. Search Centers\n3. Edit Centers\
+        print("\nHere is the options menu: \n1. Vaccination Centers\n2. Search Centers\n3. Edit Centers\
 \n4. See Reservations\n5. See Requests\n6. Approve Requests\n7. List Users\n8. Exit")
         option = input("Enter your choice: ")
         if option.strip() == '1': # OPTION 1 print Vaccination Centers
+            with open("Centers.txt", 'r') as centersFile:
+                all_centers_content = centersFile.readlines()
             for item in all_centers_content:
                 print(item.rstrip("\n"))
+
         elif option.strip() == '2': # OPTION 2 Search
+            with open("Centers.txt", 'r') as centersFile:
+                all_centers_content = centersFile.readlines()
+            centers_names = []
+            for i in range(0, len(all_centers_content), 5):
+                centers_names.append(all_centers_content[i].rstrip('\n'))
+
             try:
                 choice = input("Enter the name of the center: ")
                 cntr_indx = centers_names.index(choice) * 5 # multiply because at slicing the indexes doesn't match
@@ -77,6 +86,12 @@ def admin_do():
                 print("Not Found")
 
         elif option.strip() == '3': # OPTION 3 Edit
+            with open("Centers.txt", 'r') as centersFile:
+                all_centers_content = centersFile.readlines()
+                centers_names = []
+                for i in range(0, len(all_centers_content), 5):
+                    centers_names.append(all_centers_content[i].rstrip('\n'))
+
             print("1) Add\n2) Remove\n3) Exit")
             choice = input("Your choice: ")
             if choice.strip() == '1':
@@ -92,7 +107,10 @@ def admin_do():
                     addCenter.write(f"\n{center_vaccines}\n")
             elif choice.strip() == '2':
                 ask = input("Enter the name of the Center you want to delete: ")
-                cntr_indx = centers_names.index(ask) * 5
+                try:
+                    cntr_indx = centers_names.index(ask) * 5
+                except:
+                    print("Not Found")
                 del all_centers_content[cntr_indx:cntr_indx+5]
                 with open("Centers.txt", 'w') as f:
                     for i in all_centers_content:
@@ -104,12 +122,21 @@ def admin_do():
                 print("\nInvalid Value")
 
         elif option.strip() == '4': # OPTION 4 Reservations
+            with open("reservation.txt") as allReservations:
+                all_reservations = allReservations.readlines()
             for reservation in all_reservations:
                 print(reservation.strip('\n'))
         elif option.strip() == '5': # OPTION 5 Requests
+            with open("requests.txt", 'r') as requestsFile:
+                all_requests = requestsFile.readlines()
             for rqst in all_requests:
                 print(rqst.rstrip("\n"))
         elif option.strip() == '6': # OPTION Add Date
+            with open("requests.txt", 'r') as requestsFile:
+                all_requests = requestsFile.readlines()
+            rqst_names= []
+            for i in range(0, len(all_requests), 4):
+                rqst_names.append(all_requests[i].rstrip('\n'))
             print("First you have to specify the name of the user and the date:")
             user = input("Enter the name of the user: ")
             date = input("Specify the date: ")
@@ -135,11 +162,14 @@ def admin_do():
 
 def user_do(user_name):
     while True:
-        print("Here is the options menu: \n1. Vaccination Centers\n2. Reserve a vaccination\n3. See Resevation details\n4. Exit")
+        print("\nHere is the options menu: \n1. Vaccination Centers\n2. Reserve a vaccination\n3. See Resevation details\n4. Exit")
         option = input("Enter your choice: ")
+
         if option.strip() == '1':
-            for center in centers_names:
-                print(center)
+            with open("Centers.txt", 'r') as centersFile:
+                all_centers_content = centersFile.readlines()
+            for item in all_centers_content:
+                print(item.rstrip("\n"))
 
         elif option.strip() == '2':
             print("To reserve a vaccination you should specify where the center is and the vaccine name: ")
@@ -158,6 +188,19 @@ def user_do(user_name):
             else: print("Invalid input")
 
         elif option.strip() == '3':
+            with open("requests.txt", 'r') as requestsFile:
+                all_requests = requestsFile.readlines()
+            with open("reservation.txt") as allReservations:
+                all_reservations = allReservations.readlines()
+
+            reserve_names = []
+            for i in range(0, len(all_reservations), 5):
+                reserve_names.append(all_reservations[i].rstrip('\n'))
+            rqst_names= []
+            for i in range(0, len(all_requests), 4):
+                rqst_names.append(all_requests[i].rstrip('\n'))
+
+
             try:
                 rsv_indx = reserve_names.index(user_name) * 5
                 reserve_details = all_reservations[rsv_indx:rsv_indx+5]
